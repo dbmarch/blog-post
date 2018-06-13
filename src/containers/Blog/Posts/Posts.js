@@ -9,11 +9,12 @@ import './Posts.css';
 class Posts extends Component {
     state = {
         posts: [],
-        selectedPostId: null
+        //selectedPostId: null
     }
 
     postSelectedHandler = (id) => {
-        this.setState({selectedPostId: id});
+        this.props.history.push({pathname: '/' + id});
+        //this.setState({selectedPostId: id});
     }
 
     componentDidMount () {
@@ -41,15 +42,13 @@ class Posts extends Component {
         let posts = <p style = {{textAlign: 'center'}}> Something went wrong</p>
         if (!this.state.error) {
             posts = this.state.posts.map(post => {
-             return <Link 
-                        to={'/' + post.id} 
-                        key = {post.id}  >                       
+             return  
                     <Post  
                         title={post.title} 
-
+                        key = {post.id}
                         author = {post.author} 
-                        clicked = {() => this.postSelectedHandler(post.id)}/></Link>
-                });
+                        clicked = {() => this.postSelectedHandler(post.id)}/>
+                    });
             }
         return (
             <section className="Posts">

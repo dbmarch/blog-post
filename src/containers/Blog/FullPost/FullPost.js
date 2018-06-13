@@ -7,27 +7,38 @@ class FullPost extends Component {
         loadedPost: null
     }
 
-    componentDidMount () {
-        console.log (this.props);
+    loadData () {
         const id = this.props.match.params.id;
 
         if(id) {
-            if (!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== id)) {
+            if (this.state.loadedPost){
+                console.log (id, this.state.loadedPost.id);
+                console.log ("id", typeof id);
+                console.log ("this.state.loadedPost.id", typeof this.state.loadedPost.id);
+
+            }
+            // the + converts the string to a number:
+            if (!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== +id)) {
                 axios.get(`/posts/${id}`)
                 .then (response => {
                     this.setState({loadedPost: response.data});
                     //console.log (response);
                 })
-
-
             }
         }
+    }
+    componentDidUpdate() {
+        this.loadData();
+    }
 
+    componentDidMount () {
+        console.log (this.props);
+        this.loadData();
     }
 
     deletePostHandler = () => {
-        console.log ("delete Post: ", this.state.loadedPost.id);
-        axios.delete(`/posts/${this.state.loadedPost.id}`)
+        console.log ("delete Post: ", this.props.match.params.id);
+        axios.delete(`/posts/${this.props.match.params.id}`)
             .then(response=> {
                 console.log (response);
             })
@@ -35,7 +46,7 @@ class FullPost extends Component {
 
     render () {
         let post = <p style={{textAlign: 'center'}}>Please select a Post!</p>;
-        if (this.props.id) {
+        if (this.props.match.params.id) {
             post = <p style={{textAlign: 'center'}}>Loading...</p>;
         }
         if (this.state.loadedPost) {
